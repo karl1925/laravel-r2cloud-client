@@ -33,5 +33,10 @@ class R2CloudServiceProvider extends ServiceProvider
             'r2cloud.token',
             R2EnsureValidAccountsToken::class
         );
+
+        $this->app['router']->aliasMiddleware(
+            'r2.accounts.token',
+            R2EnsureValidAccountsToken::class
+        );
     }
 }
