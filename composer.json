@@ -17,6 +17,13 @@
             "R2Cloud\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "R2Cloud\\R2CloudServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "stable",
     "prefer-stable": true
 }
