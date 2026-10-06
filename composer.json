@@ -1,0 +1,22 @@
+{
+    "name": "karl1925/laravel-r2cloud",
+    "description": "DICT R2 Cloud authentication and identity integration for Laravel applications",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3",
+        "illuminate/auth": "^13.0",
+        "illuminate/database": "^13.0",
+        "illuminate/http": "^13.0",
+        "illuminate/routing": "^13.0",
+        "illuminate/session": "^13.0",
+        "illuminate/support": "^13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "R2Cloud\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
