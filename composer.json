@@ -1,5 +1,5 @@
 {
-    "name": "karl1925/laravel-r2cloud",
+    "name": "karl1925/laravel-r2cloud-client",
     "description": "DICT R2 Cloud authentication and identity integration for Laravel applications",
     "type": "library",
     "license": "proprietary",
@@ -24,6 +24,6 @@
             ]
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
