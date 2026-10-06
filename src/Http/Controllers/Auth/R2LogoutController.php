@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace R2Cloud\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Services\R2AccountsTokenService;
+use R2Cloud\Services\R2AccountsTokenService;
 
 class R2LogoutController extends Controller
 {

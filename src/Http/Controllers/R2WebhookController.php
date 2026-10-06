@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace R2Cloud\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class R2WebhookController extends Controller
 {

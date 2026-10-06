@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace R2Cloud\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Services\R2AccountsTokenService;
+use R2Cloud\Services\R2AccountsTokenService;
 use Exception;
 
 class R2EnsureValidAccountsToken

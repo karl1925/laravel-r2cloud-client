@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace R2Cloud\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Http;

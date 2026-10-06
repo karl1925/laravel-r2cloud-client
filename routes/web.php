@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\R2AccountsController;
-use App\Http\Controllers\Auth\R2LogoutController;
+use R2Cloud\Http\Controllers\Auth\R2AccountsController;
+use R2Cloud\Http\Controllers\Auth\R2LogoutController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;

@@ -47,6 +47,10 @@ return new class extends Migration
             if (!Schema::hasColumn('users', 'setup_completed_at')) {
                 $table->timestamp('setup_completed_at')->nullable();
             }
+
+            if (Schema::hasColumn('users', 'password')) {
+                $table->string('password')->nullable()->change();
+            }
         });
     }
 
@@ -68,10 +72,17 @@ return new class extends Migration
                 'setup_completed_at',
             ];
 
-            $existingColumns = array_filter($columns, fn($column) => Schema::hasColumn('users', $column));
+            $existingColumns = array_filter(
+                $columns,
+                fn($column) => Schema::hasColumn('users', $column)
+            );
 
             if (!empty($existingColumns)) {
                 $table->dropColumn($existingColumns);
+            }
+
+            if (Schema::hasColumn('users', 'password')) {
+                $table->string('password')->nullable(false)->change();
             }
         });
     }
