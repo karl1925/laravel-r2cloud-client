@@ -47,9 +47,7 @@ class R2AccountsController extends Controller
 
         $tokenData = $tokenService->getTokensFromCode($request->string('code')->toString());
         $accountUser = $tokenService->getUserProfile($tokenData['access_token']);
-
         $userModel = config('auth.providers.users.model');
-
         $user = $userModel::updateOrCreate(
             ['email' => $accountUser['email']],
             [
@@ -62,8 +60,8 @@ class R2AccountsController extends Controller
             ]
         );
 
-        if (isset($accountUser['roles']) && method_exists($user, 'syncAccountsRoles')) {
-            $user->syncAccountsRoles($accountUser['roles']);
+        if (isset($accountUser['roles']) && method_exists($user, 'syncOidcRoles')) {
+            $user->syncOidcRoles($accountUser['roles']);
         }
 
         Auth::login($user, true);
