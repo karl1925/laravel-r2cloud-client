@@ -1,3 +1,4 @@
+```php
 <?php
 
 namespace R2Cloud\Http\Controllers\Auth;
@@ -15,15 +16,20 @@ class R2AccountsController extends Controller
         $state = Str::random(40);
         $request->session()->put('oauth_state', $state);
 
-        $query = http_build_query([
+        $query = [
             'client_id' => config('r2cloud.accounts.client_id'),
             'redirect_uri' => config('r2cloud.accounts.redirect'),
             'response_type' => 'code',
-            'scope' => config('r2cloud.accounts.scope', 'profile email'),
             'state' => $state,
-        ]);
+        ];
 
-        return redirect(config('r2cloud.accounts.base_url') . '/oauth/authorize?' . $query);
+        $scope = trim((string) config('r2cloud.accounts.scope', ''));
+
+        if ($scope !== '') {
+            $query['scope'] = $scope;
+        }
+
+        return redirect(config('r2cloud.accounts.base_url') . '/oauth/authorize?' . http_build_query($query));
     }
 
     public function callback(Request $request, R2AccountsTokenService $tokenService)
@@ -40,10 +46,8 @@ class R2AccountsController extends Controller
 
         abort_unless($request->filled('code'), 400, 'Authorization code is missing.');
 
-        $tokenData = $tokenService->getTokensFromCode($request->code);
+        $tokenData = $tokenService->getTokensFromCode($request->string('code')->toString());
         $accountUser = $tokenService->getUserProfile($tokenData['access_token']);
-
-        logger()->info('R2 Cloud UserInfo returned', ['userinfo' => $accountUser]);
 
         $userModel = config('auth.providers.users.model');
 
@@ -59,8 +63,8 @@ class R2AccountsController extends Controller
             ]
         );
 
-        if (isset($accountUser['roles']) && method_exists($user, 'syncOidcRoles')) {
-            $user->syncOidcRoles($accountUser['roles']);
+        if (isset($accountUser['roles']) && method_exists($user, 'syncAccountsRoles')) {
+            $user->syncAccountsRoles($accountUser['roles']);
         }
 
         Auth::login($user, true);
@@ -87,7 +91,7 @@ class R2AccountsController extends Controller
     {
         $user = Auth::user();
 
-        if ($user && $user->access_token) {
+        if ($user?->access_token) {
             try {
                 $tokenService->revokeToken($user->access_token);
             } catch (\Throwable $e) {
@@ -106,3 +110,4 @@ class R2AccountsController extends Controller
         return redirect()->away($accountsLogoutUrl);
     }
 }
+```
