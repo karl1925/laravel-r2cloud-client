@@ -1,7 +1,6 @@
 <?php
 
 use R2Cloud\Http\Controllers\Auth\R2AccountsController;
-use R2Cloud\Http\Controllers\Auth\R2LogoutController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -21,7 +20,7 @@ Route::middleware('web')->group(
     Route::get('/auth/callback', [R2AccountsController::class, 'callback'])
         ->name('accounts.callback');
 
-    Route::post('/logout', [R2LogoutController::class, 'logout'])
+    Route::post('/logout', [R2AccountsController::class, 'logout'])
         ->name('logout');
 
     Route::get('/login', function () {
