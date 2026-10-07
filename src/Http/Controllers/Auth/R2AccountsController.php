@@ -1,4 +1,3 @@
-```php
 <?php
 
 namespace R2Cloud\Http\Controllers\Auth;
@@ -110,4 +109,3 @@ class R2AccountsController extends Controller
         return redirect()->away($accountsLogoutUrl);
     }
 }
-```
