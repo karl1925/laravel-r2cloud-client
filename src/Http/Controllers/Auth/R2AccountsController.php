@@ -42,17 +42,7 @@ class R2AccountsController extends Controller
         $accountUser = $tokenService->getUserProfile($tokenData['access_token']);
 
         // 3. Find or create the user in DigiSign local DB
-        $user = User::updateOrCreate(
-            ['accounts_user_id' => $accountUser['id']],
-            [
-                'name' => $accountUser['name'],
-                'email' => $accountUser['email'],
-                'avatar' => $accountUser['avatar'] ?? null,
-                'access_token' => $tokenData['access_token'],
-                'refresh_token' => $tokenData['refresh_token'] ?? null,
-                'token_expires_at' => now()->addSeconds($tokenData['expires_in']),
-            ]
-        );
+        $user = User::updateOrCreate(['email' => $accountUser['email']], ['accounts_user_id' => $accountUser['id'], 'name' => $accountUser['name'], 'avatar' => $accountUser['avatar'] ?? null, 'access_token' => $tokenData['access_token'], 'refresh_token' => $tokenData['refresh_token'] ?? null, 'token_expires_at' => now()->addSeconds($tokenData['expires_in']),]);
 
         // 4. Sync roles locally (via Spatie Permission package)
         if (isset($accountUser['roles'])) {
