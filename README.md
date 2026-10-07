@@ -30,7 +30,7 @@ ACCOUNTS_BASE_URL=https://dictr2.cloud
 ACCOUNTS_CLIENT_ID=
 ACCOUNTS_CLIENT_SECRET=
 ACCOUNTS_REDIRECT_URI=https://your-domain.com/auth/callback
-ACCOUNTS_SCOPE="openid profile email"
+ACCOUNTS_SCOPE="profile email"
 ```
 
 ### 5. Clear the configuration cache
