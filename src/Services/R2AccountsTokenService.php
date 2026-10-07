@@ -54,9 +54,9 @@ class R2AccountsTokenService
         $response = Http::asForm()->post("{$this->baseUrl}/oauth/token", [
             'grant_type' => 'refresh_token',
             'refresh_token' => $refreshToken,
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'scope' => 'openid profile email',
+            'client_id' => config('r2cloud.accounts.client_id'),
+            'redirect_uri' => config('r2cloud.accounts.redirect'),
+            'scope' => config('r2cloud.accounts.scope', 'profile email'),
         ]);
 
         if (!$response->successful()) {
