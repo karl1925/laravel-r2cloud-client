@@ -9,6 +9,7 @@ DICT R2 Cloud authentication and identity integration for Laravel applications.
 ```bash
 composer config repositories.r2cloud-client vcs https://github.com/karl1925/laravel-r2cloud-client.git
 composer require karl1925/laravel-r2cloud-client:dev-main
+php artisan vendor:publish --tag=config.r2cloud
 ```
 
 ### 2. Publish the configuration
