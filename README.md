@@ -7,6 +7,7 @@ DICT R2 Cloud authentication and identity integration for Laravel applications.
 ### 1. Install the package
 
 ```bash
+composer config repositories.r2cloud-client vcs https://github.com/karl1925/laravel-r2cloud-client.git
 composer require karl1925/laravel-r2cloud-client:dev-main
 ```
 
