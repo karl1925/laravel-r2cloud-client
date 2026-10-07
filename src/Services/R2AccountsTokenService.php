@@ -2,105 +2,90 @@
 
 namespace R2Cloud\Services;
 
-use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class R2AccountsTokenService
 {
-    protected string $baseUrl;
-    protected string $clientId;
-    protected string $clientSecret;
-    protected string $redirectUri;
-
-    public function __construct()
-    {
-        $this->baseUrl = rtrim(config('r2cloud.accounts.base_url'), '/');
-        $this->clientId = config('r2cloud.accounts.client_id');
-        $this->clientSecret = config('r2cloud.accounts.client_secret');
-        $this->redirectUri = config('r2cloud.accounts.redirect');
-    }
-
-    /**
-     * Exchange an Authorization Code for Access & Refresh Tokens.
-     */
     public function getTokensFromCode(string $code): array
     {
-        $response = Http::asForm()->post("{$this->baseUrl}/oauth/token", [
+        $response = Http::asForm()->post($this->url(config('r2cloud.accounts.token_endpoint', '/oauth/token')), [
             'grant_type' => 'authorization_code',
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'redirect_uri' => $this->redirectUri,
+            'client_id' => config('r2cloud.accounts.client_id'),
+            'client_secret' => config('r2cloud.accounts.client_secret'),
+            'redirect_uri' => config('r2cloud.accounts.redirect'),
             'code' => $code,
         ]);
 
-        if (!$response->successful()) {
-            Log::error('Accounts App token exchange failed', [
+        if ($response->failed()) {
+            Log::error('R2 Cloud token exchange failed', [
                 'status' => $response->status(),
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('Failed to exchange authorization code for tokens.');
+            throw new RuntimeException('R2 Cloud token exchange failed.');
         }
 
         return $response->json();
     }
 
-    /**
-     * Refresh an expired Access Token using a Refresh Token.
-     */
     public function refreshToken(string $refreshToken): array
     {
-        $response = Http::asForm()->post("{$this->baseUrl}/oauth/token", [
+        $response = Http::asForm()->post($this->url(config('r2cloud.accounts.token_endpoint', '/oauth/token')), [
             'grant_type' => 'refresh_token',
             'refresh_token' => $refreshToken,
             'client_id' => config('r2cloud.accounts.client_id'),
-            'redirect_uri' => config('r2cloud.accounts.redirect'),
+            'client_secret' => config('r2cloud.accounts.client_secret'),
             'scope' => config('r2cloud.accounts.scope', 'profile email'),
         ]);
 
-        if (!$response->successful()) {
-            Log::error('Accounts App token refresh failed', [
+        if ($response->failed()) {
+            Log::error('R2 Cloud token refresh failed', [
                 'status' => $response->status(),
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('Failed to refresh access token.');
+            throw new RuntimeException('R2 Cloud token refresh failed.');
         }
 
         return $response->json();
     }
 
-    /**
-     * Fetch user profile details from the Accounts App using an Access Token.
-     */
     public function getUserProfile(string $accessToken): array
     {
         $response = Http::withToken($accessToken)
-            ->acceptJson()
-            ->get("{$this->baseUrl}/api/user");
+            ->get($this->url(config('r2cloud.accounts.user_endpoint', '/api/user')));
 
-        if (!$response->successful()) {
-            Log::error('Failed to fetch user profile from Accounts App', [
+        if ($response->failed()) {
+            Log::error('R2 Cloud user profile request failed', [
                 'status' => $response->status(),
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('Failed to fetch user profile.');
+            throw new RuntimeException('R2 Cloud user profile request failed.');
         }
 
         return $response->json();
     }
 
-    /**
-     * Revoke a specific Access Token (used on logout).
-     */
-    public function revokeToken(string $accessToken): bool
+    public function revokeToken(string $accessToken): void
     {
         $response = Http::withToken($accessToken)
-            ->acceptJson()
-            ->delete("{$this->baseUrl}/oauth/tokens");
+            ->delete($this->url(config('r2cloud.accounts.revoke_endpoint', '/oauth/tokens')));
 
-        return $response->successful();
+        if ($response->failed()) {
+            Log::warning('R2 Cloud token revocation failed', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+
+            throw new RuntimeException('R2 Cloud token revocation failed.');
+        }
+    }
+
+    protected function url(string $endpoint): string
+    {
+        return rtrim(config('r2cloud.accounts.base_url'), '/') . '/' . ltrim($endpoint, '/');
     }
 }
